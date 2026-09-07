@@ -11,7 +11,7 @@ class UserRole(str, enum.Enum):
 
 class UserCreate(BaseModel):
     username: Annotated[str, Field(..., min_length=3, max_length=50, description="Unique username of the user")]
-    email: Annotated[str, Field(..., description="User email address")]
+    email: Annotated[EmailStr, Field(..., description="User email address")]
     firstname: Annotated[str, Field(..., min_length=1, max_length=100, description="User first name")]
     lastname: Annotated[str, Field(..., min_length=1, max_length=100, description="User last name")]
     password: Annotated[str, Field(..., min_length=6, max_length=128, description="Password of the user")]

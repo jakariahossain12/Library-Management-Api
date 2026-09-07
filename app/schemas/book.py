@@ -19,7 +19,7 @@ class BookUpdate(BaseModel):
     description: Optional[str] = Field(default=None)
     price: Optional[float] = Field(default=None)
     category: Optional[str] = Field(default=None)
-    total_copies: Optional[str] = Field(default=None)
-    available_copies: Optional[str] = Field(default=None)
+    total_copies: Optional[int] = Field(default=None)
+    available_copies: Optional[int] = Field(default=None)
 
 
