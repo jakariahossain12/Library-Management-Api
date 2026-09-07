@@ -6,7 +6,7 @@ class Reservations(Base):
     __tablename__ = "reservations"
 
 
-    id = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True,index=True)
     book_id = Column(Integer,ForeignKey('books.id'))
     user_id = Column(Integer,ForeignKey('users.id'))
     reservations_date = Column(DateTime, default=func.now(), nullable=False)

@@ -23,3 +23,7 @@ class BookUpdate(BaseModel):
     available_copies: Optional[int] = Field(default=None)
 
 
+class IssueBook(BaseModel):
+    book_id:int
+    user_id:int
+
