@@ -13,7 +13,7 @@ router = APIRouter(tags=['users login'])
 @router.post('/auth/register')
 def sin_Up(db:db_dependency,new_user:UserCreate):
     user = crate_new_user(db,new_user)
-    return JSONResponse(status_code=status.HTTP_201_CREATED,content=user)
+    return user
 
 @router.post('/auth/login')
 def login(db:db_dependency,form_data:Annotated[OAuth2PasswordRequestForm,Depends()]):

@@ -59,8 +59,8 @@ def password_change(db:Session,user_id:int,updatePass:PasswordUpdate):
     if not user:
             raise HTTPException(status_code=404,detail="user not found")
 
-    if pwd_context.verify(updatePass.old_password,user.hash_password):
-        user.hash_password = pwd_context.hash(updatePass.new_password)
+    if pwd_context.verify(updatePass.old_password, user.hashed_password):
+        user.hashed_password = pwd_context.hash(updatePass.new_password)
         db.add(user)
         db.commit()
         db.refresh(user)

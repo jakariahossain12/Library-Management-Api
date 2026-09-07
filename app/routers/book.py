@@ -13,7 +13,7 @@ router = APIRouter(tags=['Get Books for users'])
 def get_All_Book(user:user_dependency,db:db_dependency):
     if user is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,detail="failed Authentication")
-    tran = get_all_books(db,user.get('id'))
+    tran = get_all_books(db)
     return tran
 
 
