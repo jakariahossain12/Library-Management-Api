@@ -2,7 +2,7 @@ from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
 from typing import Optional
 from app.models.Book import Book
-from app.schemas.book import BookCreate
+from app.schemas.book import BookCreate,BookUpdate
 
 
 
@@ -15,3 +15,14 @@ def create_book(db:Session,new_book:BookCreate):
     db.commit()
     db.refresh(book_model)
 
+def book_update(db:Session,update_book:BookUpdate,book_id:int):
+    book = db.query(Book).filter(Book.id == book_id).first()
+
+    if book is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="Book not found")
+
+    update_data = update_book.model_dump(exclude_unset=True)
+
+    for key,value in update_data.items():
+        setattr(book,key,value)
+    
