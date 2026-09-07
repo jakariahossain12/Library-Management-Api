@@ -13,3 +13,13 @@ class BookCreate(BaseModel):
     
 
 
+class BookUpdate(BaseModel):
+    title: Optional[str] = Field(default=None)
+    author: Optional[str] = Field(default=None)
+    description: Optional[str] = Field(default=None)
+    price: Optional[float] = Field(default=None)
+    category: Optional[str] = Field(default=None)
+    total_copies: Optional[str] = Field(default=None)
+    available_copies: Optional[str] = Field(default=None)
+
+
