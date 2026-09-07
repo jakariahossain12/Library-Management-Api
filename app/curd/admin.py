@@ -7,6 +7,16 @@ from app.models.reservations import Reservations
 from app.schemas.book import BookCreate,BookUpdate,IssueBook
 from app.models.issueRecords import IssueRecords
 from datetime import datetime,timedelta
+from config import settings
+
+def calculate_fine(due_date:datetime,return_date:datetime):
+    overdue_days = (return_date.date() - due_date.date()).days
+    if overdue_days > 0:
+        return round(overdue_days * settings.FINE_PER_DAY,2)
+    else:
+        return 0.0
+
+
 
 def create_book(db:Session,new_book:BookCreate):
     book_model = Book(
@@ -79,5 +89,30 @@ def book_issue(db:Session,issue_request:IssueBook):
     db.commit()
     db.refresh(issue_model)
 
+
+
+
+def return_book(db:Session,issue_id:int):
+    issue = db.query(IssueRecords).filter(IssueRecords.id == issue_id).first()
+
+    if issue is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="Issue record not found")
+
+    return_date = datetime.now
+    fine = calculate_fine(issue.due_date,return_date)
+
+    issue.return_date = return_date
+    issue.status = 'returned'
+    issue.fine_amount = fine
+
+
+    book = db.query(Book).filter(Book.id == issue.book_id).first()
+    if book is not None:
+        book.available_copies +=1
+
+
+    db.commit()
+    db.refresh()
+    return fine
 
 
