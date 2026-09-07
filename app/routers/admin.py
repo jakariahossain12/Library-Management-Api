@@ -2,8 +2,8 @@ from fastapi import APIRouter,status,HTTPException,Query
 from dependencies import user_dependency,db_dependency
 from fastapi.responses import JSONResponse
 from typing import Optional
-from app.schemas.book import BookCreate,BookUpdate
-from app.curd.admin import create_book,book_update,book_delete
+from app.schemas.book import BookCreate,BookUpdate,IssueBook
+from app.curd.admin import create_book,book_update,book_delete,book_issue
 
 
 router = APIRouter(tags=['Admin'])
@@ -47,6 +47,18 @@ def delete_book(user:user_dependency,db:db_dependency,book_id:int):
 
     book_delete(db,book_id)
     return JSONResponse(status_code=status.HTTP_200_OK,content="Book delete successfully")
+
+
+@router.post('/admin/create_issue/',status_code=status.HTTP_201_CREATED)
+def create_issue(user:user_dependency,db:db_dependency,issue_request:IssueBook):
+    if user is None:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,detail="failed Authentication")
+    if user.get('role') != 'librarian':
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,detail="Forbidden access")
+
+    book_issue(db,issue_request)
+    return JSONResponse(status_code=status.HTTP_201_CREATED,content="Book issued successfully")
+
 
 
 
