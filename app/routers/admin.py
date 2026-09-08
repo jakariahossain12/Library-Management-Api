@@ -5,7 +5,7 @@ from typing import Optional,List
 from pydantic import BaseModel
 from app.schemas.user import UserResponse
 from app.schemas.book import BookCreate,BookUpdate,IssueBook
-from app.curd.admin import create_book,book_update,book_delete,book_issue,return_book,fine_paid,get_all_user
+from app.curd.admin import create_book,book_update,book_delete,book_issue,return_book,fine_paid,get_all_user,not_return_book
 
 
 router = APIRouter(tags=['Admin'])
@@ -23,6 +23,15 @@ def get_All_User(user:user_dependency,db:db_dependency):
     users = get_all_user(db)
     return {"users":users}
 
+@router.get('/admin/all_not_return_book/',status_code=status.HTTP_200_OK)
+def not_return_Book(user:user_dependency,db:db_dependency):
+    if user is None:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,detail="failed Authentication")
+    if user.get('role') != 'librarian':
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,detail="Forbidden access")
+
+    not_return = not_return_book(db)
+    return {"Not_return_book":not_return}
 
 
 @router.post('/admin/create_book',status_code=status.HTTP_201_CREATED)

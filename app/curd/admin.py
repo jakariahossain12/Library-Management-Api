@@ -123,6 +123,12 @@ def return_book(db:Session,issue_id:int):
     return fine
 
 
+def not_return_book(db:Session):
+    not_return = db.query(IssueRecords).filter(IssueRecords.status != 'returned').all()
+    return not_return
+
+
+
 def fine_paid(db:Session,issue_id:int):
     issue = db.query(IssueRecords).filter(IssueRecords.id == issue_id).first()
 
