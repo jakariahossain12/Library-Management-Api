@@ -116,3 +116,11 @@ def return_book(db:Session,issue_id:int):
     return fine
 
 
+def fine_paid(db:Session,issue_id:int):
+    issue = db.query(IssueRecords).filter(IssueRecords.id == issue_id).first()
+
+    if issue is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="Issue record not found")
+
+    issue.fine_paid = True
+

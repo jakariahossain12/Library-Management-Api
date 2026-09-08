@@ -3,7 +3,7 @@ from dependencies import user_dependency,db_dependency
 from fastapi.responses import JSONResponse
 from typing import Optional
 from app.schemas.book import BookCreate,BookUpdate,IssueBook
-from app.curd.admin import create_book,book_update,book_delete,book_issue,return_book
+from app.curd.admin import create_book,book_update,book_delete,book_issue,return_book,fine_paid
 
 
 router = APIRouter(tags=['Admin'])
@@ -49,6 +49,7 @@ def delete_book(user:user_dependency,db:db_dependency,book_id:int):
     return JSONResponse(status_code=status.HTTP_200_OK,content="Book delete successfully")
 
 
+
 @router.post('/admin/create_issue/',status_code=status.HTTP_201_CREATED)
 def create_issue(user:user_dependency,db:db_dependency,issue_request:IssueBook):
     if user is None:
@@ -58,6 +59,7 @@ def create_issue(user:user_dependency,db:db_dependency,issue_request:IssueBook):
 
     book_issue(db,issue_request)
     return JSONResponse(status_code=status.HTTP_201_CREATED,content="Book issued successfully")
+
 
 
 @router.post('/admin/return_book/{issue_id}',status_code=status.HTTP_200_OK)
@@ -70,6 +72,16 @@ def book_return(user:user_dependency,db:db_dependency,issue_id:int):
     fine = return_book(db,issue_id)
     return JSONResponse(status_code=status.HTTP_200_OK,content={'message':"Book returned successfully","fine_amount":fine})
 
+
+@router.patch('/admin/fine/pay/{issue_id}',status_code=status.HTTP_200_OK)
+def fine_Paid(user:user_dependency,db:db_dependency,issue_id:int):
+    if user is None:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,detail="failed Authentication")
+    if user.get('role') != 'librarian':
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,detail="Forbidden access")
+
+    fine_paid(db,issue_id)
+    return JSONResponse(status_code=status.HTTP_200_OK,content={'message':"Fine paid successfully"})
 
 
 
