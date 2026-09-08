@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 from typing import Optional
 from app.models.Book import Book
 from app.models.user import User
+from app.schemas.user import RoleUpdate
 from app.models.reservations import Reservations
 from app.schemas.book import BookCreate,BookUpdate,IssueBook
 from app.models.issueRecords import IssueRecords
@@ -21,6 +22,15 @@ def calculate_fine(due_date:datetime,return_date:datetime):
 def get_all_user(db:Session):
     users = db.query(User).all()
     return users
+
+# update user role
+def role_update(db:Session,user_id:int,update_role:RoleUpdate):
+    user = db.query(User).filter(User.id == user_id).first()
+    if user is None:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="user not found")
+    user.role = update_role.role
+    db.commit()
+    db.refresh(user)
 
 
 

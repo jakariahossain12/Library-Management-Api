@@ -7,6 +7,11 @@ import enum
 class UserRole(str, enum.Enum):
     LIBRARIAN = "librarian"
     MEMBER = "member"
+    USER = "user"
+
+class RoleUpdate(BaseModel):
+    role: Optional[str] = Field(default=None)
+
 
 
 class UserCreate(BaseModel):

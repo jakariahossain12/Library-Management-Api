@@ -3,9 +3,9 @@ from dependencies import user_dependency,db_dependency
 from fastapi.responses import JSONResponse
 from typing import Optional,List
 from pydantic import BaseModel
-from app.schemas.user import UserResponse
+from app.schemas.user import UserResponse,RoleUpdate
 from app.schemas.book import BookCreate,BookUpdate,IssueBook
-from app.curd.admin import create_book,book_update,book_delete,book_issue,return_book,fine_paid,get_all_user,not_return_book
+from app.curd.admin import create_book,book_update,book_delete,book_issue,return_book,fine_paid,get_all_user,not_return_book,role_update
 
 
 router = APIRouter(tags=['Admin'])
@@ -33,6 +33,20 @@ def not_return_Book(user:user_dependency,db:db_dependency):
     not_return = not_return_book(db)
     return {"Not_return_book":not_return}
 
+@router.patch('/admin/role_update/{user_id}', status_code=status.HTTP_200_OK)
+def user_role_update(
+    user: user_dependency, 
+    db: db_dependency, 
+    user_id: int, 
+    update_role: RoleUpdate
+):
+    if user is None:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Failed authentication")
+    if str(user.get('role')) != 'librarian':
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail="Forbidden access")
+
+    role_update(db, user_id, update_role)
+    return {"message": "User role updated successfully"}
 
 @router.post('/admin/create_book',status_code=status.HTTP_201_CREATED)
 def create_new_book(user:user_dependency,db:db_dependency,new_book:BookCreate):
