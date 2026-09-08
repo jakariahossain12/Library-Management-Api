@@ -17,6 +17,13 @@ def calculate_fine(due_date:datetime,return_date:datetime):
         return 0.0
 
 
+# get all users
+def get_all_user(db:Session):
+    users = db.query(User).all()
+    return users
+
+
+
 
 def create_book(db:Session,new_book:BookCreate):
     book_model = Book(

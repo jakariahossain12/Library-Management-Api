@@ -3,10 +3,21 @@ from dependencies import user_dependency,db_dependency
 from fastapi.responses import JSONResponse
 from typing import Optional
 from app.schemas.book import BookCreate,BookUpdate,IssueBook
-from app.curd.admin import create_book,book_update,book_delete,book_issue,return_book,fine_paid
+from app.curd.admin import create_book,book_update,book_delete,book_issue,return_book,fine_paid,get_all_user
 
 
 router = APIRouter(tags=['Admin'])
+
+
+@router.get('/admin/all_user/',status_code=status.HTTP_200_OK)
+def get_All_User(user:user_dependency,db:db_dependency):
+    if user is None:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,detail="failed Authentication")
+    if user.get('role') != 'librarian':
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,detail="Forbidden access")
+
+    users = get_all_user(db)
+    return users
 
 
 
