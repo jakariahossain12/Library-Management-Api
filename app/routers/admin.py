@@ -1,15 +1,19 @@
 from fastapi import APIRouter,status,HTTPException,Query
 from dependencies import user_dependency,db_dependency
 from fastapi.responses import JSONResponse
-from typing import Optional
+from typing import Optional,List
+from pydantic import BaseModel
+from app.schemas.user import UserResponse
 from app.schemas.book import BookCreate,BookUpdate,IssueBook
 from app.curd.admin import create_book,book_update,book_delete,book_issue,return_book,fine_paid,get_all_user
 
 
 router = APIRouter(tags=['Admin'])
 
+class UserListResponse(BaseModel):
+    users: List[UserResponse]
 
-@router.get('/admin/all_user/',status_code=status.HTTP_200_OK)
+@router.get('/admin/all_user/',status_code=status.HTTP_200_OK,response_model=UserListResponse)
 def get_All_User(user:user_dependency,db:db_dependency):
     if user is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,detail="failed Authentication")
@@ -17,7 +21,7 @@ def get_All_User(user:user_dependency,db:db_dependency):
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN,detail="Forbidden access")
 
     users = get_all_user(db)
-    return users
+    return {"users":users}
 
 
 

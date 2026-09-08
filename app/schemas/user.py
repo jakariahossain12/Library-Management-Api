@@ -26,3 +26,14 @@ class UserUpdate(BaseModel):
 class PasswordUpdate(BaseModel):
     old_password:Annotated[str,Field(...,description="Enter your old password")]
     new_password:Annotated[str,Field(...,description="Enter your new password")]
+
+
+
+class UserResponse(BaseModel):
+    id: int
+    username: str
+    email: EmailStr
+    firstname: str
+    lastname: str
+    is_active: bool
+    role: UserRole
