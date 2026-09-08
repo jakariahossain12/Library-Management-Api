@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 from typing import Optional
 from app.models.Book import Book
 from app.models.reservations import Reservations
+from app.models.issueRecords import IssueRecords
 
 
 
@@ -37,4 +38,8 @@ def cancel_reserve_book (db:Session,reservations_id:int):
 def my_reservation (db:Session,user_id:int):
     reservations = db.query(Reservations).filter(Reservations.user_id == user_id).all()
     return reservations
+
+def my_issueRecords(db:Session,user_id:int):
+    issueRecords = db.query(IssueRecords).filter(IssueRecords.user_id == user_id).all()
+    return issueRecords
 
