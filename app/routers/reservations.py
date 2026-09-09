@@ -16,7 +16,7 @@ def book_reservation(user:user_dependency,db:db_dependency,book_id:int):
     if user is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,detail="failed Authentication")
     reserve_book(db,book_id,user.get('id'))
-    return JSONResponse(content={'message':'Book reserve successfully'})
+    return JSONResponse(status_code=status.HTTP_201_CREATED,content={'message':'Book reserve successfully'})
 
 
 

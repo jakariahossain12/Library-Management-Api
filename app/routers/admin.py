@@ -100,7 +100,7 @@ def create_issue(user:user_dependency,db:db_dependency,issue_request:IssueBook):
 
 
 
-@router.post('/admin/return_book/{issue_id}',status_code=status.HTTP_200_OK)
+@router.put('/admin/return_book/{issue_id}',status_code=status.HTTP_200_OK)
 def book_return(user:user_dependency,db:db_dependency,issue_id:int):
     if user is None:
         raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED,detail="failed Authentication")

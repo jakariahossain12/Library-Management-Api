@@ -66,7 +66,7 @@ def book_delete(db:Session,book_id:int):
     db.query(Book).filter(Book.id == book_id).delete()
 
     db.commit()
-    db.refresh()
+    
 
 
 def book_issue(db:Session,issue_request:IssueBook):
@@ -84,7 +84,7 @@ def book_issue(db:Session,issue_request:IssueBook):
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST,detail="No copies Available")
 
     loan_days = 14
-    issue_date = datetime.now
+    issue_date = datetime.now()
     issue_model = IssueRecords(
         book_id = issue_request.book_id,     
         user_id = issue_request.user_id,
@@ -115,7 +115,7 @@ def return_book(db:Session,issue_id:int):
     if issue is None:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail="Issue record not found")
 
-    return_date = datetime.now
+    return_date = datetime.now()
     fine = calculate_fine(issue.due_date,return_date)
 
     issue.return_date = return_date
@@ -129,7 +129,7 @@ def return_book(db:Session,issue_id:int):
 
 
     db.commit()
-    db.refresh()
+    db.refresh(issue)
     return fine
 
 
