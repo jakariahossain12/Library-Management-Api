@@ -5,7 +5,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from fastapi import Depends
 from typing import Annotated
 
-engine = create_engine(settings.DATABASE_URL,connect_args={"check_same_thread": False})
+engine = create_engine(settings.DATABASE_URL)
 
 SessionLocal = sessionmaker(autoflush=False,autocommit = False,bind=engine)
 
